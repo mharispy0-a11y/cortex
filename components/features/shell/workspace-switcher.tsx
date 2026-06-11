@@ -1,6 +1,9 @@
 "use client";
 
-import { Check, ChevronsUpDown, Plus } from "lucide-react";
+import { useTransition } from "react";
+import Link from "next/link";
+import { Check, ChevronsUpDown, Loader2, Plus } from "lucide-react";
+import { toast } from "sonner";
 
 import {
   DropdownMenu,
@@ -10,13 +13,33 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { setActiveWorkspace } from "@/server/actions/workspaces";
 
-// Mock data until Supabase workspaces land in Milestone 2.
-const workspaces = [{ id: "acme", name: "Acme Inc" }];
-const activeWorkspaceId = "acme";
+export type WorkspaceItem = {
+  id: string;
+  name: string;
+};
 
-export function WorkspaceSwitcher() {
-  const active = workspaces.find((w) => w.id === activeWorkspaceId)!;
+export function WorkspaceSwitcher({
+  workspaces,
+  activeWorkspaceId,
+}: {
+  workspaces: WorkspaceItem[];
+  activeWorkspaceId: string;
+}) {
+  const [isPending, startTransition] = useTransition();
+  const active =
+    workspaces.find((w) => w.id === activeWorkspaceId) ?? workspaces[0];
+
+  if (!active) return null;
+
+  function switchTo(id: string) {
+    if (id === activeWorkspaceId) return;
+    startTransition(async () => {
+      const result = await setActiveWorkspace(id);
+      if (result?.error) toast.error(result.error);
+    });
+  }
 
   return (
     <DropdownMenu>
@@ -25,18 +48,28 @@ export function WorkspaceSwitcher() {
           className="flex size-6 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-indigo-500 to-violet-600 text-xs font-semibold text-white"
           aria-hidden="true"
         >
-          {active.name.charAt(0)}
+          {active.name.charAt(0).toUpperCase()}
         </span>
         <span className="truncate font-medium">{active.name}</span>
-        <ChevronsUpDown
-          className="ml-auto size-3.5 shrink-0 text-muted-foreground"
-          aria-hidden="true"
-        />
+        {isPending ? (
+          <Loader2
+            className="ml-auto size-3.5 shrink-0 animate-spin text-muted-foreground"
+            aria-hidden="true"
+          />
+        ) : (
+          <ChevronsUpDown
+            className="ml-auto size-3.5 shrink-0 text-muted-foreground"
+            aria-hidden="true"
+          />
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">
         <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
         {workspaces.map((workspace) => (
-          <DropdownMenuItem key={workspace.id}>
+          <DropdownMenuItem
+            key={workspace.id}
+            onSelect={() => switchTo(workspace.id)}
+          >
             <span className="truncate">{workspace.name}</span>
             {workspace.id === activeWorkspaceId && (
               <Check className="ml-auto size-4" aria-hidden="true" />
@@ -44,10 +77,11 @@ export function WorkspaceSwitcher() {
           </DropdownMenuItem>
         ))}
         <DropdownMenuSeparator />
-        <DropdownMenuItem disabled>
-          <Plus className="size-4" aria-hidden="true" />
-          Create workspace
-          <span className="ml-auto text-xs text-muted-foreground">Soon</span>
+        <DropdownMenuItem asChild>
+          <Link href="/onboarding">
+            <Plus className="size-4" aria-hidden="true" />
+            Create workspace
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

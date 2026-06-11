@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 
-import { Sidebar } from "@/components/features/shell/sidebar";
-import { UserMenu } from "@/components/features/shell/user-menu";
+import { Sidebar, type SidebarProps } from "@/components/features/shell/sidebar";
+import { UserMenu, type UserMenuUser } from "@/components/features/shell/user-menu";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -17,9 +17,14 @@ import {
 
 const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
+  "/settings": "Settings",
 };
 
-export function Topbar() {
+export function Topbar({
+  user,
+  workspaces,
+  activeWorkspaceId,
+}: SidebarProps & { user: UserMenuUser }) {
   const pathname = usePathname();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -40,7 +45,10 @@ export function Topbar() {
           <SheetHeader className="sr-only">
             <SheetTitle>Navigation</SheetTitle>
           </SheetHeader>
-          <Sidebar />
+          <Sidebar
+            workspaces={workspaces}
+            activeWorkspaceId={activeWorkspaceId}
+          />
         </SheetContent>
       </Sheet>
 
@@ -51,7 +59,7 @@ export function Topbar() {
       </h1>
 
       <div className="ml-auto">
-        <UserMenu />
+        <UserMenu user={user} />
       </div>
     </header>
   );

@@ -18,7 +18,15 @@ Anthropic API, Stripe. See README for setup.
   - Animated landing page: hero w/ chat preview, features, how-it-works, CTA
   - App shell: fixed sidebar (sheet on mobile), topbar, workspace switcher + user menu (mocked)
   - Dashboard placeholder with stat cards + empty state
-- [ ] **M2 — Auth + Workspaces** — Supabase auth (email + OAuth), workspace CRUD, invites, RLS policies, protected routes
+- [~] **M2 — Auth + Workspaces** *(code complete — live verification pending Supabase keys)*
+  - `@supabase/ssr` cookie sessions, middleware session refresh + `/dashboard`·`/settings`·`/onboarding`·`/invite` route protection
+  - Migration `db/migrations/0001_auth_workspaces.sql`: profiles (signup trigger + moddatetime), workspaces, members, invites
+  - RLS on every table; SECURITY DEFINER helpers break policy recursion; all INSERTs have WITH CHECK
+  - `create_workspace()` RPC (avoids trigger-vs-RETURNING read-back race) + `accept_workspace_invite()` RPC
+  - Partial unique index blocks duplicate pending invites (case-insensitive)
+  - Login/signup (email+password, Zod + RHF), onboarding, settings w/ members + copyable invite links
+  - `npm run test:rls` — two-user tenant-isolation proof (13 checks)
+  - **Remaining:** apply migration to a Supabase project, run `test:rls`, manual signup→invite round-trip
 - [ ] **M3 — Document ingestion** — upload → Storage → chunk → embed → pgvector, indexing status UI
 - [ ] **M4 — RAG chat** — streaming chat, retrieval, inline citations, no-answer guardrail, history
 - [ ] **M5 — Analytics dashboard** — Recharts widgets (queries, docs, tokens)
@@ -27,10 +35,13 @@ Anthropic API, Stripe. See README for setup.
 
 ## Deliberate stubs (to be replaced, not forgotten)
 
-- "Sign in" / "Get started" link straight to `/dashboard` — real auth gate in M2
-- Workspace switcher + user menu render mock data — wired to Supabase in M2
-- Sidebar items Documents/Chat/Analytics/Settings are disabled "Soon" entries
+- **Google OAuth**: button wired to `signInWithOAuth` but credentials not yet
+  added in the Supabase dashboard — shows an honest "not configured" toast (M2)
+- **Invite emails are not sent** — invites produce a copyable link only; an
+  email provider lands later
+- Sidebar items Documents/Chat/Analytics are disabled "Soon" entries
 - Dashboard stats hardcoded to 0; "Upload documents" button disabled until M3
+- "Profile" menu item disabled ("Soon")
 
 ## Notes
 

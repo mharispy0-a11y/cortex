@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { BarChart3, FileSearch, FileText, MessagesSquare } from "lucide-react";
 
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getSessionContext } from "@/server/queries";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -16,12 +18,15 @@ const stats = [
   { label: "Tokens used", value: "0", icon: BarChart3 },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const session = await getSessionContext();
+  if (!session?.activeWorkspace) redirect("/onboarding");
+
   return (
     <div className="flex flex-col gap-8">
       <div>
         <h2 className="text-2xl font-semibold tracking-tight">
-          Welcome to Acme Inc
+          Welcome to {session.activeWorkspace.name}
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Here&apos;s what&apos;s happening in your workspace.

@@ -1,6 +1,8 @@
 "use client";
 
-import { LogOut, Settings, User } from "lucide-react";
+import { useTransition } from "react";
+import Link from "next/link";
+import { Loader2, LogOut, Settings, User } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -11,11 +13,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { signOut } from "@/server/actions/auth";
 
-// Mock identity until Supabase auth lands in Milestone 2.
-const mockUser = { name: "Demo User", email: "demo@cortex.app", initials: "DU" };
+export type UserMenuUser = {
+  name: string;
+  email: string;
+  initials: string;
+};
 
-export function UserMenu() {
+export function UserMenu({ user }: { user: UserMenuUser }) {
+  const [isPending, startTransition] = useTransition();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -24,15 +32,15 @@ export function UserMenu() {
       >
         <Avatar className="size-8 border border-white/10">
           <AvatarFallback className="bg-gradient-to-br from-indigo-500/30 to-violet-600/30 text-xs font-medium">
-            {mockUser.initials}
+            {user.initials}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>
-          <p className="text-sm font-medium">{mockUser.name}</p>
-          <p className="text-xs font-normal text-muted-foreground">
-            {mockUser.email}
+          <p className="truncate text-sm font-medium">{user.name}</p>
+          <p className="truncate text-xs font-normal text-muted-foreground">
+            {user.email}
           </p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -41,16 +49,28 @@ export function UserMenu() {
           Profile
           <span className="ml-auto text-xs text-muted-foreground">Soon</span>
         </DropdownMenuItem>
-        <DropdownMenuItem disabled>
-          <Settings className="size-4" aria-hidden="true" />
-          Settings
-          <span className="ml-auto text-xs text-muted-foreground">Soon</span>
+        <DropdownMenuItem asChild>
+          <Link href="/settings">
+            <Settings className="size-4" aria-hidden="true" />
+            Settings
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem disabled>
-          <LogOut className="size-4" aria-hidden="true" />
+        <DropdownMenuItem
+          disabled={isPending}
+          onSelect={(event) => {
+            event.preventDefault();
+            startTransition(async () => {
+              await signOut();
+            });
+          }}
+        >
+          {isPending ? (
+            <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+          ) : (
+            <LogOut className="size-4" aria-hidden="true" />
+          )}
           Sign out
-          <span className="ml-auto text-xs text-muted-foreground">Soon</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

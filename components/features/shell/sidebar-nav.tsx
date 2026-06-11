@@ -27,7 +27,7 @@ const navItems: NavItem[] = [
   { label: "Documents", icon: FileText, comingSoon: true },
   { label: "Chat", icon: MessagesSquare, comingSoon: true },
   { label: "Analytics", icon: BarChart3, comingSoon: true },
-  { label: "Settings", icon: Settings, comingSoon: true },
+  { label: "Settings", icon: Settings, href: "/settings" },
 ];
 
 export function SidebarNav() {
