@@ -1,0 +1,7 @@
+# Netlify's Next.js Runtime v5 detects Next.js and manages the publish
+# directory, SSR, and route handlers itself — do not set `publish`.
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
