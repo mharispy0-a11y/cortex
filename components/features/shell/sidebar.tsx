@@ -16,11 +16,11 @@ export function Sidebar({ workspaces, activeWorkspaceId }: SidebarProps) {
   return (
     <div className="flex h-full flex-col gap-6 px-4 py-5">
       <Link
-        href="/"
+        href="/dashboard"
         className="rounded-md px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <Logo />
-        <span className="sr-only">Cortex home</span>
+        <span className="sr-only">Cortex dashboard</span>
       </Link>
       <WorkspaceSwitcher
         workspaces={workspaces}

@@ -26,7 +26,7 @@ export function CtaSection() {
               asChild
               className="mt-8 shadow-[0_0_32px_-8px] shadow-indigo-500/60"
             >
-              <Link href="/dashboard">
+              <Link href="/signup">
                 Create your workspace
                 <ArrowRight aria-hidden="true" />
               </Link>

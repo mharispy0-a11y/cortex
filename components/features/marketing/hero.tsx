@@ -47,7 +47,7 @@ export function Hero() {
               asChild
               className="shadow-[0_0_32px_-8px] shadow-indigo-500/60"
             >
-              <Link href="/dashboard">
+              <Link href="/signup">
                 Start for free
                 <ArrowRight aria-hidden="true" />
               </Link>

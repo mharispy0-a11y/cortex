@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { AuthCta } from "@/components/features/marketing/auth-cta";
 import { Logo } from "@/components/ui/logo";
 
 const navLinks = [
@@ -32,14 +32,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" asChild>
-            <Link href="/dashboard">Sign in</Link>
-          </Button>
-          <Button asChild className="shadow-[0_0_24px_-6px] shadow-indigo-500/50">
-            <Link href="/dashboard">Get started</Link>
-          </Button>
-        </div>
+        <AuthCta />
       </div>
     </header>
   );

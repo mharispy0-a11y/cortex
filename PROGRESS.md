@@ -18,15 +18,21 @@ Anthropic API, Stripe. See README for setup.
   - Animated landing page: hero w/ chat preview, features, how-it-works, CTA
   - App shell: fixed sidebar (sheet on mobile), topbar, workspace switcher + user menu (mocked)
   - Dashboard placeholder with stat cards + empty state
-- [~] **M2 — Auth + Workspaces** *(code complete — live verification pending Supabase keys)*
+- [x] **M2 — Auth + Workspaces** *(verified: 13/13 RLS isolation checks + 8/8 browser E2E checks + manual round-trip)*
   - `@supabase/ssr` cookie sessions, middleware session refresh + `/dashboard`·`/settings`·`/onboarding`·`/invite` route protection
   - Migration `db/migrations/0001_auth_workspaces.sql`: profiles (signup trigger + moddatetime), workspaces, members, invites
   - RLS on every table; SECURITY DEFINER helpers break policy recursion; all INSERTs have WITH CHECK
   - `create_workspace()` RPC (avoids trigger-vs-RETURNING read-back race) + `accept_workspace_invite()` RPC
   - Partial unique index blocks duplicate pending invites (case-insensitive)
   - Login/signup (email+password, Zod + RHF), onboarding, settings w/ members + copyable invite links
-  - `npm run test:rls` — two-user tenant-isolation proof (13 checks)
-  - **Remaining:** apply migration to a Supabase project, run `test:rls`, manual signup→invite round-trip
+  - `npm run test:rls` — two-user tenant-isolation proof: **13/13 passed** against the live project
+  - `scripts/e2e-smoke.ts` — headless-Chrome UI flow (login → onboarding →
+    create → invite → accept → sign out): **8/8 passed**
+  - Verified finding: plain `.insert().select()` on workspaces **fails** with an
+    RLS violation (RETURNING is checked before the AFTER-INSERT membership
+    trigger fires) — `create_workspace()` RPC is the required path, app uses it
+  - Post-QA fixes: marketing header is auth-aware ("Open dashboard" when signed
+    in), sidebar logo links to /dashboard, marketing CTAs point at /signup
 - [ ] **M3 — Document ingestion** — upload → Storage → chunk → embed → pgvector, indexing status UI
 - [ ] **M4 — RAG chat** — streaming chat, retrieval, inline citations, no-answer guardrail, history
 - [ ] **M5 — Analytics dashboard** — Recharts widgets (queries, docs, tokens)
