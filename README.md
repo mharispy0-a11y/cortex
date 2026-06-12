@@ -2,7 +2,7 @@
 
 > Chat with your knowledge.
 
-**Live preview:** https://getcortex.netlify.app *(Milestone 1 foundation — UI shell with stubs, auth not wired yet)*
+**Live preview:** https://getcortex.netlify.app *(Milestone 2 — real auth + multi-tenant workspaces with RLS; document ingestion and chat land in M3–M4)*
 
 Cortex is a multi-tenant SaaS where teams upload documents and chat with an AI
 that answers **only** from their uploaded knowledge (retrieval-augmented

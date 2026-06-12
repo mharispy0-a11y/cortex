@@ -1,9 +1,11 @@
 # Cortex — Build Progress
 
-**Live preview:** https://getcortex.netlify.app — a **foundation preview with M1
-stubs** (auth not wired, mock workspace/user data, uploads disabled). This is a
-WIP demo, not the finished product. Deployed via Netlify CLI (`netlify deploy
---build --prod`); connect the repo in the Netlify dashboard later for CI/CD.
+**Live preview:** https://getcortex.netlify.app — running **M2**: Supabase auth
+(email/password), multi-tenant workspaces with RLS, invites via copyable link.
+Still a WIP demo: Google OAuth pending credentials, no document upload yet.
+Deployed via Netlify CLI (`netlify deploy --prod`); Netlify env carries the
+Supabase publishable key only — the secret key never leaves `.env.local`.
+Connect the repo in the Netlify dashboard later for CI/CD.
 
 Multi-tenant AI knowledge assistant (RAG SaaS). Stack: Next.js 15 (App Router),
 TypeScript strict, Tailwind v4, shadcn/ui, Framer Motion, Supabase + pgvector,
