@@ -43,8 +43,12 @@ Anthropic API, Stripe. See README for setup.
 
 ## Deliberate stubs (to be replaced, not forgotten)
 
-- **Google OAuth**: button wired to `signInWithOAuth` but credentials not yet
-  added in the Supabase dashboard — shows an honest "not configured" toast (M2)
+- **Google OAuth**: button is guarded by `NEXT_PUBLIC_GOOGLE_OAUTH_ENABLED`.
+  When the flag is absent or not `"true"` the button shows a toast ("Google
+  sign-in is coming soon — use email for now") and **never** calls
+  `signInWithOAuth` or navigates to supabase.co. Enable by: (1) configure the
+  Google provider in the Supabase dashboard, (2) set the flag to `"true"` in
+  Netlify environment variables, (3) redeploy.
 - **Invite emails are not sent** — invites produce a copyable link only; an
   email provider lands later
 - Sidebar items Documents/Chat/Analytics are disabled "Soon" entries

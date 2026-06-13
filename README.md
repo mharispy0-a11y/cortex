@@ -28,8 +28,19 @@ cp .env.example .env.local   # fill in keys as milestones require them
 npm run dev
 ```
 
-Open http://localhost:3000 — the landing page. The app shell lives at
-`/dashboard` (no auth gate yet; that arrives in Milestone 2).
+Open http://localhost:3000 — the landing page. The app shell lives at `/dashboard`.
+
+### Google OAuth
+
+Disabled by default. The button shows a toast and **never** redirects to
+Supabase until you enable it:
+
+1. Go to your Supabase dashboard → **Authentication → Providers → Google** and
+   add your OAuth client ID + secret.
+2. Add your production URL to **Authentication → URL Configuration → Redirect URLs**.
+3. Set `NEXT_PUBLIC_GOOGLE_OAUTH_ENABLED=true` in your Netlify environment
+   variables (or `.env.local` for local dev).
+4. Redeploy.
 
 ### Scripts
 

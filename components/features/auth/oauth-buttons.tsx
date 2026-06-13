@@ -29,10 +29,10 @@ function GoogleIcon() {
   );
 }
 
-/**
- * Wired to signInWithOAuth — works the moment Google credentials are added
- * in the Supabase dashboard. Until then it surfaces an honest toast.
- */
+// Inlined at build time by Next.js. When absent or not "true", the button
+// never calls signInWithOAuth and never navigates to supabase.co.
+const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ENABLED === "true";
+
 export function OAuthButtons({ next }: { next?: string }) {
   const [isPending, startTransition] = useTransition();
 
@@ -42,12 +42,16 @@ export function OAuthButtons({ next }: { next?: string }) {
       variant="outline"
       className="w-full"
       disabled={isPending}
-      onClick={() =>
+      onClick={() => {
+        if (!googleEnabled) {
+          toast.info("Google sign-in is coming soon — use email for now.");
+          return;
+        }
         startTransition(async () => {
           const result = await signInWithGoogle(next);
           if (result?.error) toast.error(result.error);
-        })
-      }
+        });
+      }}
     >
       <GoogleIcon />
       Continue with Google
