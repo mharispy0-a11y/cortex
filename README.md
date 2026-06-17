@@ -48,11 +48,7 @@ It's built as a real, production-grade, **multi-tenant SaaS** — auth, isolated
 
 <div align="center">
 
-| Ask your documents anything | Grounded answer with sources |
-| :---: | :---: |
-| _screenshot_ | _screenshot_ |
-
-> _Add your demo GIF and screenshots here._
+![Cortex demo](cortex_demo.gif)
 
 </div>
 
